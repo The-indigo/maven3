@@ -1,14 +1,27 @@
 pipeline {
     agent any
-    triggers {
-        githubPush()
+    tools {
+        maven 'Maven 3.3.9'
+        jdk 'jdk8'
     }
     stages {
-        stage('Display JENKINS_URL and BUILD_ID') {
+        stage ('Initialize') {
             steps {
-                git 'https://github.com/The-indigo/maven3.git'
-                sh 'echo JENKINS_URL: $JENKINS_URL'
-                sh 'echo BUILD_ID: $BUILD_ID'
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true install' 
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml' 
+                }
             }
         }
     }
