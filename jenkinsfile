@@ -4,6 +4,7 @@ pipeline {
         githubPush()
     }
     stages {
+        
         stage('Display JENKINS_URL and BUILD_ID') {
             steps {
                 git 'https://github.com/The-indigo/maven3.git'
